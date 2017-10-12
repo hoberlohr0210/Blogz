@@ -11,32 +11,5 @@
         <p><input type="submit" value="Add Entry"/></p>
     </form>
 
-<!--  
-    {% if new_blog|length == 0 %}
-    <p>No blogs yet</p>
-    {% else %}
-    
-        <ul>
-            {% for blog in new_blog %}
-            <li>{{blog.title}}
-                <form method="POST" action="/blog" style="display:inline-block;">
-                    <input type="hidden" name="blog-id" value="{{blog.id}}" />
-                </form>
-            </li>
-            {% endfor %}
-        </ul>
-    
-    {% endif %} -->
-    
-    
-    
-    <!-- <h2>Completed</h2>
-    
-    <ul>
-        {% for blog in completed_blogs %}
-        <li>{{blog.title}}</li>
-        {% endfor %}
-    </ul>  -->
-
 
 {% endblock %}

@@ -14,15 +14,19 @@ class Blog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(120))
     new_post = db.Column(db.String(1000))
-    #completed = db.Column(db.Boolean)
+    completed = db.Column(db.Boolean)
     #owner_id = db.Column(db.Integer)
 
     def __init__(self, title, new_post):
         self.title = title
         self.new_post = new_post
-        #self.completed = False
+        self.completed = False
         #self.owner = owner
 
+@app.route('/')
+def index():
+    blogs = Blog.query.all()
+    return render_template('blog.html', blogs=blogs)
 
 @app.route('/newpost', methods=['POST', 'GET'])
 def newpost():
@@ -31,9 +35,6 @@ def newpost():
     if request.method == 'POST':
         title = request.form['title']
         new_post = request.form['new_post']
-        #new_blog = (title, new_post)
-
-        #blog = Blog.query.get(new_blog)
 
         if not title or not new_post:
             flash("You left a box empty, you big goon!")
@@ -41,38 +42,30 @@ def newpost():
         
 
         else:
-             new_blog = Blog(title, new_post) 
-             db.session.add(new_blog)
-             db.session.commit()
-             return redirect('/blog')
+            new_blog = Blog(title, new_post) 
+            db.session.add(new_blog)
+            db.session.commit()
+
+            return redirect('/blog?id=' + str(new_blog.id))
+        
                 
+    return render_template('newpost.html')    
 
-        # if len(title) < 3:
-        #     flash("Use your imagination and write a longer title!")
-        #     return redirect('/newpost')
-
-        # if len(new_post) < 20:
-        #     flash("Your life cannot possibly be that boring. Write a longer post!")
-        #     return redirect('/newpost')
-
-        # existing_blog = Blog.query.filter_by(new_post=new_post).first() 
-        # if not existing_blog:
-        #     new_blog = Blog(title, new_post) 
-        #     db.session.add(new_blog)
-        #     db.session.commit()
-        #     return redirect('/blog')
-        # else:
-        #     flash('Whoops! Tell me something new, you already wrote that!')
-        #     return redirect('/newpost')
-
-       
-
-    return render_template('newpost.html')
-
-
-@app.route('/blog')
+@app.route('/blog', methods=['GET'])
 def blog():
-    return render_template('blog.html')
+
+    if request.args:
+        id = request.args.get("id")
+        blog = Blog.query.get(id)
+        
+
+        return render_template('uniqueblog.html', title="Build a Blog", blog=blog)
+
+    else:
+        blogs = Blog.query.all()
+
+        return render_template('blog.html', blogs=blogs)
+
 
 if __name__ == '__main__':
     app.run()
