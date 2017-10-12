@@ -46,7 +46,7 @@ def newpost():
             db.session.add(new_blog)
             db.session.commit()
 
-            return redirect('/blog?=' + blog.id)
+            return redirect('/blog?id=' + str(new_blog.id))
             # id = request.args.get("id")
             # blog = Blog.query.get(id)
             # return render_template('uniqueblog.html', blog=blog)
