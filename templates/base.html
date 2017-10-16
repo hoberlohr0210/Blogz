@@ -2,6 +2,11 @@
 <html>
     <head>
         <title>{{title}}</title>
+        <style>
+            .error {
+                color: red;
+            }
+        </style>
         
     </head>
 
@@ -10,13 +15,6 @@
             <a href="/blog">Main Blog Page</a> | <a href="/newpost">Add a Blog Entry</a>
         </div>
 
-    {% with messages = get_flashed_messages(with_categories=True) %}
-        <ul>
-            {% for category, message in messages %}
-                <li class="{{category}}" color="red">{{message}}</li>
-            {% endfor %}
-        </ul>
-    {% endwith %}
     
     {% block content %}
     {% endblock %}

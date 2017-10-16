@@ -15,14 +15,12 @@ class Blog(db.Model):
     title = db.Column(db.String(120))
     new_post = db.Column(db.String(1000))
     completed = db.Column(db.Boolean)
-    #owner_id = db.Column(db.Integer)
 
     def __init__(self, title, new_post):
         self.title = title
         self.new_post = new_post
         self.completed = False
-        #self.owner = owner
-
+        
 @app.route('/')
 def index():
     blogs = Blog.query.all()
@@ -31,27 +29,32 @@ def index():
 @app.route('/newpost', methods=['POST', 'GET'])
 def newpost():
 
+    if request.method == "GET":
+        return render_template('newpost.html')
 
-    if request.method == 'POST':
+    title_error = ''
+    new_post_error = ''
+
+    if request.method=="POST":
         title = request.form['title']
         new_post = request.form['new_post']
 
-        if not title or not new_post:
-            flash("You left a box empty, you big goon!")
-            return redirect('/newpost')
+    if not title:
+        title_error = "You left the title empty, you big goon!"
+            
+
+    if not new_post:
+        new_post_error = "Whoops! You left the textbox blank!"
+            
         
+    if not title_error and not new_post_error:
+        new_blog = Blog(title, new_post) 
+        db.session.add(new_blog)
+        db.session.commit()
 
-        else:
-            new_blog = Blog(title, new_post) 
-            db.session.add(new_blog)
-            db.session.commit()
-
-            return redirect('/blog?id=' + str(new_blog.id))
-            # id = request.args.get("id")
-            # blog = Blog.query.get(id)
-            # return render_template('uniqueblog.html', blog=blog)
+        return redirect('/blog?id=' + str(new_blog.id))
                 
-    return render_template('newpost.html')    
+    return render_template('newpost.html', title_error=title_error, new_post_error=new_post_error)    
 
 @app.route('/blog', methods=['GET'])
 def blog():
@@ -60,7 +63,6 @@ def blog():
         id = request.args.get("id")
         blog = Blog.query.get(id)
         
-
         return render_template('uniqueblog.html', title="Build a Blog", blog=blog)
 
     else:
