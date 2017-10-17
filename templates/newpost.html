@@ -8,7 +8,7 @@
     
         <p><label>Blog Title: <input type="text" name="title" value='{{request.form['title']}}'/></label></p>
         <span class="error">{{title_error}}</span>
-        <p><label>New Blog Post: <textarea name="new_post" value='{{request.form['new_post']}}'></textarea></label></p>
+        <p><label>New Blog Post: <textarea name="new_post">{{request.form['new_post']}}</textarea></label></p>
         <span class="error">{{new_post_error}}</span>
         <p><input type="submit" value="Add Entry"/></p>
     </form>
